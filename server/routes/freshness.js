@@ -5,10 +5,10 @@ import fs from 'fs';
 import FormData from 'form-data';
 import Freshness from '../models/Freshness.js';
 
-const router = express.Router();
+const freshnessRoute = express.Router();
 const upload = multer({ dest: 'uploads/' });
 
-router.post('/', upload.single('image'), async (req, res) => {
+freshnessRoute.post('/', upload.single('image'), async (req, res) => {
   try {
     const image = req.file;
     if (!image) {
@@ -68,4 +68,4 @@ router.post('/', upload.single('image'), async (req, res) => {
   }
 });
 
-export default router;
+export default freshnessRoute;
