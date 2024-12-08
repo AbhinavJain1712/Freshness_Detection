@@ -32,7 +32,7 @@ connectDb();
 
 app.use('/api/freshness', freshnessRoute);
 app.get('/', (req, res) => {
-  res.send('Welcome to the Freshness Detection API');
+  res.json({msg:'Welcome to the Freshness Detection API'});
 });
 
 
