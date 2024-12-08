@@ -8,7 +8,7 @@ import Freshness from '../models/Freshness.js';
 const freshnessRoute = express.Router();
 const upload = multer({ dest: 'uploads/' });
 
-freshnessRoute.post('/api/freshness', upload.single('image'), async (req, res) => {
+freshnessRoute.post('/', upload.single('image'), async (req, res) => {
   try {
     const image = req.file;
     if (!image) {
