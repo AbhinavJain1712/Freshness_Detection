@@ -31,7 +31,7 @@ function App() {
 
     setLoading(true);
     try {
-      const response = await axios.post("https://freshness-detection-3x03.onrender.com/", formData, {
+      const response = await axios.post(`https://freshness-detection-3x03.onrender.com/api/freshness`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

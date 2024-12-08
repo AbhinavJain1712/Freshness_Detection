@@ -30,10 +30,12 @@ const connectDb = async () => {
 };
 connectDb();
 
-app.use('/api/freshness', freshnessRoute);
+
 app.get('/', (req, res) => {
   res.json({msg:'Welcome to the Freshness Detection API'});
 });
+
+app.use('/api/freshness', freshnessRoute);
 
 
 const PORT = process.env.PORT || 5000;
