@@ -9,14 +9,16 @@ dotenv.config();
 
 const app = express();
 
+// Middleware
 app.use(cors({
-  origin: ["https://jovial-douhua-112b07.netlify.app/"],
+  origin: ["http://localhost:3000"], // Allow only frontend on localhost:3000
   methods: ["POST", "GET", "PUT", "DELETE"],
   credentials: true,
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// MongoDB Connection
 const connectDb = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI, {
@@ -30,13 +32,13 @@ const connectDb = async () => {
 };
 connectDb();
 
-
-app.get('/', (req, res) => {
-  res.json({msg:'Welcome to the Freshness Detection API'});
-});
+// Routes
+// app.get('/', (req, res) => {
+//   res.json({ msg: 'Welcome to the Freshness Detection API' });
+// });
 
 app.use('/api/freshness', freshnessRoute);
 
-
+// Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

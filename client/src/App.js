@@ -8,16 +8,13 @@ function App() {
 
   const handleImageUpload = (e) => {
     setImage(e.target.files[0]);
-    setResult(null);
+    setResult(null); // Reset the result when a new image is uploaded
   };
 
   const formatTimestamp = (isoTimestamp) => {
-    const timestamp = new Date(isoTimestamp);
-    const timezoneOffset = timestamp.getTimezoneOffset();
-    const offsetSign = timezoneOffset > 0 ? "-" : "+";
-    const offsetHours = String(Math.abs(Math.floor(timezoneOffset / 60))).padStart(2, '0');
-    const offsetMinutes = String(Math.abs(timezoneOffset % 60)).padStart(2, '0');
-    return `${timestamp.toISOString().slice(0, -1)}${offsetSign}${5}:${offsetMinutes}`;
+    const date = new Date(isoTimestamp);
+    const isoString = date.toISOString().slice(0, 19); // Remove milliseconds and 'Z'
+    return `${isoString}+05:30`;
   };
 
   const handleSubmit = async () => {
@@ -31,7 +28,7 @@ function App() {
 
     setLoading(true);
     try {
-      const response = await axios.post(`https://freshness-detection-3x03.onrender.com/api/freshness`, formData, {
+      const response = await axios.post('http://localhost:5000/api/freshness', formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -39,14 +36,12 @@ function App() {
 
       console.log("Response data:", response.data);
 
-      // Extract the fields from the backend response
       const { freshness, lifespan, record } = response.data;
-      
 
       setResult({
-        freshness: freshness.toFixed(2), // Format the freshness score
-        lifespan, // Lifespan is already rounded in the backend
-        timestamp: formatTimestamp(record.createdAt), // Format the timestamp
+        freshness: freshness.toFixed(2),
+        lifespan,
+        timestamp: formatTimestamp(record.createdAt),
       });
     } catch (error) {
       console.error("Error processing image:", error);
@@ -62,12 +57,26 @@ function App() {
       <input type="file" accept="image/*" onChange={handleImageUpload} />
       <button onClick={handleSubmit} style={{ marginLeft: "10px" }}>Submit</button>
       {loading && <p>Processing...</p>}
+
       {result && (
         <div style={{ marginTop: "20px" }}>
           <h3>Results:</h3>
-          <p><strong>Freshness Score:</strong> {result.freshness}</p>
-         <p><strong>Timestamp:</strong> {result.timestamp}</p>
-          <p><strong>Estimated Lifespan:</strong>{result.lifespan} days</p>
+          <table style={{ margin: "0 auto", borderCollapse: "collapse", width: "50%" }}>
+            <thead>
+              <tr>
+                <th style={{ padding: "8px", border: "1px solid #ddd" }}>Freshness Score</th>
+                <th style={{ padding: "8px", border: "1px solid #ddd" }}>Timestamp</th>
+                <th style={{ padding: "8px", border: "1px solid #ddd" }}>Estimated Lifespan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style={{ padding: "8px", border: "1px solid #ddd" }}>{result.freshness}</td>
+                <td style={{ padding: "8px", border: "1px solid #ddd" }}>{result.timestamp}</td>
+                <td style={{ padding: "8px", border: "1px solid #ddd" }}>{result.lifespan} days</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       )}
     </div>
