@@ -2,7 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import freshnessRoute from './routes/freshness.js';
+import Router from './routes/route.js';
 import bodyParser from 'body-parser';
 
 dotenv.config();
@@ -10,11 +10,7 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors({
-  origin: ["http://localhost:3000"], // Allow only frontend on localhost:3000
-  methods: ["POST", "GET", "PUT", "DELETE"],
-  credentials: true,
-}));
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -32,12 +28,13 @@ const connectDb = async () => {
 };
 connectDb();
 
-// Routes
 // app.get('/', (req, res) => {
 //   res.json({ msg: 'Welcome to the Freshness Detection API' });
 // });
 
-app.use('/api/freshness', freshnessRoute);
+
+//Routes
+app.use('/', Router);
 
 // Start Server
 const PORT = process.env.PORT || 5000;

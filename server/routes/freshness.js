@@ -8,7 +8,7 @@ import Freshness from '../models/Freshness.js';
 const router = express.Router();
 const upload = multer({ dest: 'uploads/' });
 
-router.post('/', upload.single('image'), async (req, res) => {
+const freshness = async (req, res) => {
   try {
     const image = req.file;
     if (!image) {
@@ -37,7 +37,9 @@ router.post('/', upload.single('image'), async (req, res) => {
 
     // Calculate the freshness score and lifespan
     const freshnessScore = predictions[0].confidence;
-    let lifespan = Math.max(1, Math.round((1 - freshnessScore) * 10));
+    let lifespan = predictions[0].class[4];
+    if(predictions[0].class.length>5)
+      lifespan = lifespan+predictions[0].class[5];
     lifespan = 30 - lifespan; // Adjust lifespan calculation as needed
 
     // Save the results to MongoDB
@@ -51,7 +53,7 @@ router.post('/', upload.single('image'), async (req, res) => {
 
     // Send response back to the client
     res.status(200).json({
-      freshness: freshnessScore,
+      freshness: freshnessScore,  
       lifespan,
       record: { createdAt: new Date().toISOString() },
     });
@@ -62,6 +64,6 @@ router.post('/', upload.single('image'), async (req, res) => {
     console.error("Error processing image:", error);
     res.status(500).json({ error: "Error processing image" });
   }
-});
+};
 
-export default router;
+export default freshness;
