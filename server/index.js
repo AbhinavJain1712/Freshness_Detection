@@ -10,13 +10,12 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors(
-  {
-        origin: ["https://strong-haupia-17583a.netlify.app/"],
-        methods: ["POST", "GET", "PUT", "DELETE"],
-        credentials: true
-    }
-));
+app.use(cors({
+  origin: 'https://strong-haupia-17583a.netlify.app', // Frontend domain
+  methods: ['GET', 'POST'], // Allowed methods
+  credentials: true, // Include credentials if needed
+}));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

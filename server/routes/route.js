@@ -1,14 +1,18 @@
 import express from 'express';
-import freshness from './freshness.js';
 import multer from 'multer';
+import freshness from './freshness.js';
 
-const upload = multer({ dest: 'uploads/' });
 const router = express.Router();
 
-router.get("/", (req, res) => {
-    res.json("Hello");
-})
+// Configure Multer with memory storage (better for platforms without persistent file storage)
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
-router.post('/', upload.single('image'),freshness);
+// Add routes
+router.get('/', (req, res) => {
+  res.json("Hello, your backend is running!");
+});
+
+router.post('/', upload.single('image'), freshness);
 
 export default router;
